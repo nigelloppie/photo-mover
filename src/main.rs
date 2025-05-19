@@ -1,4 +1,5 @@
 use chrono::{self, TimeZone, Utc};
+use std::fmt::format;
 use std::io;
 use std::fs;
 use std::path::Path;
@@ -8,11 +9,11 @@ fn main() {
     let mut source = String::new();
     let mut dest = String::new();
 
-    println!("Source Directory {}:", "(e.g. D:\\Photos\\Random 2023)");
+    println!("Source Directory {}:", "(SD Card e.g. F:\\fuji_103)");
     io::stdin().read_line(&mut source).expect("Failed to read line");
 
     println!("Destination Directory {}:",
-        "(e.g. D:\\Photos\\Random 2023)");
+        "(Computer e.g. D:\\Photos\\Camera\\Raw)");
     io::stdin().read_line(&mut dest).expect("Failed to read line");
 
     let source = source.trim();
@@ -46,8 +47,8 @@ fn move_files(source: &Path, dest: &Path) -> std::io::Result<()> {
                                         .expect("File cannot be crated before Epoch")
                                         .as_nanos();
                             let datetime_utc = Utc.timestamp_nanos(timestamp.try_into().unwrap());
-                            let destination_dir = format!("{}\\{}",dest.display().to_string(),datetime_utc.format("%Y-%m-%d"));
-                            fs::create_dir_all(format!("{}\\{}",dest.display().to_string(),datetime_utc.format("%Y-%m-%d")))?;
+                            let destination_dir = format!("{}\\{}\\{}",dest.display().to_string(),datetime_utc.format("%Y"),datetime_utc.format("%Y-%m-%d"));
+                            fs::create_dir_all(format!("{}\\{}\\{}",dest.display().to_string(),datetime_utc.format("%Y"),datetime_utc.format("%Y-%m-%d")))?;
                             let file_name = entry.file_name();
 
                             if let Some(file_name_str) = file_name.to_str() {
